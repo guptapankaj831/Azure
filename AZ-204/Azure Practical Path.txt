@@ -1,0 +1,78 @@
+1. Develop Azure compute solutions (25–30%)
+	A. Implement IaaS solutions
+		Create and manage a VM using Azure CLI, PowerShell, and ARM templates.
+		Deploy an application to a VM and configure startup tasks.
+		Scale and manage VMs using Virtual Machine Scale Sets.
+
+	B. Create Azure App Service Web Apps
+		Deploy code to App Service using GitHub Actions or Azure DevOps.
+		Set up deployment slots and swap them.
+		Configure custom domains and TLS/SSL certificates.
+		Implement authentication using App Service Authentication.
+
+	C. Implement Azure Functions
+		Develop and deploy a Function App using triggers (HTTP, Timer, Blob).
+		Use bindings to integrate with Azure Storage or Service Bus.
+		Configure durable functions to handle stateful workflows.
+		Secure functions with Azure AD or function keys.
+
+2. Develop for Azure storage (10–15%)
+	A. Develop solutions that use Cosmos DB
+		Connect to Cosmos DB using SDKs and configure partitioning.
+		Perform CRUD operations using SQL API.
+		Implement indexing and consistency levels.
+		Handle throttling and retries.
+
+	B. Develop solutions that use Blob Storage
+		Upload and download files using .NET/Azure SDKs.
+		Implement shared access signatures (SAS) for secure access.
+		Configure lifecycle management policies.
+		Handle event-based triggers with Event Grid and Blob Storage.
+
+3. Implement Azure security (15–20%)
+	A. Implement user authentication and authorization
+		Integrate Azure AD authentication in a web app (using MSAL or Microsoft.Identity.Web).
+		Secure APIs using Azure AD and validate JWT tokens.
+		Use managed identities to access Azure resources.
+
+	B. Implement secure cloud solutions
+		Store and retrieve secrets from Azure Key Vault.
+		Use Key Vault-backed configuration in Azure App Service and Functions.
+		Encrypt data using encryption at rest and in transit.
+
+4. Monitor, troubleshoot, and optimize Azure solutions (10–15%)
+	A. Integrate caching and content delivery
+		Use Azure Cache for Redis to cache data from a web app.
+		Configure CDN for static assets and monitor cache hit ratio.
+
+	B. Instrument solutions for monitoring and logging
+		Use Application Insights to track custom telemetry.
+		Create alerts and dashboards in Azure Monitor.
+		Configure distributed tracing in microservices.
+
+5. Connect to and consume Azure services and third-party services (15–20%)
+	A. Implement API Management
+		Import OpenAPI specs into API Management.
+		Secure APIs with subscription keys and OAuth2.
+		Create and apply policies (rate limiting, CORS, transformation).
+
+	B. Develop event-based and message-based solutions
+		Use Azure Event Grid with Logic Apps or Functions.
+		Implement Azure Service Bus queues and topics.
+		Implement Azure Event Hubs for telemetry ingestion.
+
+6. Develop for the cloud (10–15%)
+	A. Implement serverless logic
+		Create and manage Logic Apps for workflow automation.
+		Use connectors like Outlook, SharePoint, and SQL in Logic Apps.
+
+	B. Implement solutions that use containers
+		Build and deploy a container to Azure Container Instances (ACI).
+		Deploy a microservice to Azure Kubernetes Service (AKS).
+		Set up CI/CD for containerized applications.
+
+Bonus: Practice Project Ideas
+	Deploy a full-stack app using App Service + Azure SQL + Blob Storage.
+	Event-driven photo upload: Blob trigger to process images via Azure Functions.
+	Serverless API: Azure Functions with Cosmos DB and API Management in front.
+	Real-time telemetry dashboard using Event Hubs + Stream Analytics + Power BI.

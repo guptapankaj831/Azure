@@ -1,0 +1,170 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    // Web App name - must be globally unique
+    "webAppName": {
+      "type": "string"
+    },
+
+    // Azure region
+    "location": {
+      "type": "string",
+      "defaultValue": "East US"
+    },
+
+    // Name of the App Service Plan
+    "hostingPlanName": {
+      "type": "string"
+    },
+
+    // SKU name like F1, B1, S1, P1v3, etc.
+    "skuName": {
+      "type": "string",
+      "defaultValue": "P1v3",
+      "allowedValues": [ "F1", "D1", "B1", "B2", "B3", "S1", "S2", "S3", "P1v2", "P2v2", "P3v2", "P1v3", "P2v3", "P3v3", "I1", "I2", "I3", "I1v2", "I2v2", "I3v2" ]
+    },
+
+    // Tier of the pricing plan
+    "skuTier": {
+      "type": "string",
+      "defaultValue": "PremiumV3"
+    },
+
+    // Number of workers (instances)
+    "workerSize": {
+      "type": "int",
+      "defaultValue": 1
+    },
+
+    // Linux runtime stack, only used if isLinux = true
+    "linuxFxVersion": {
+      "type": "string",
+      "defaultValue": "NODE|18-lts",
+      "metadata": {
+        "description": "Only for Linux apps, e.g., DOTNET|6.0, PYTHON|3.10"
+      }
+    },
+
+    // Whether this is a Linux app
+    "isLinux": {
+      "type": "bool",
+      "defaultValue": true
+    },
+
+    // App settings (environment variables)
+    "appSettings": {
+      "type": "object",
+      "defaultValue": {
+        "ENVIRONMENT": "Production",
+        "MySecret": "SuperSecret123"
+      }
+    },
+
+    // Enforce HTTPS-only
+    "enableHttpsOnly": {
+      "type": "bool",
+      "defaultValue": true
+    },
+
+    // Enable diagnostic logging
+    "enableDiagnostics": {
+      "type": "bool",
+      "defaultValue": true
+    },
+
+    // Create a staging deployment slot
+    "enableStagingSlot": {
+      "type": "bool",
+      "defaultValue": true
+    }
+  },
+
+  "resources": [
+    // App Service Plan (Linux or Windows)
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2022-03-01",
+      "name": "[parameters('hostingPlanName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "tier": "[parameters('skuTier')]",
+        "capacity": "[parameters('workerSize')]"
+      },
+      "properties": {
+        "reserved": "[parameters('isLinux')]"  // 'true' means Linux
+      }
+    },
+
+    // Main Web App
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2022-03-01",
+      "name": "[parameters('webAppName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+      ],
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "httpsOnly": "[parameters('enableHttpsOnly')]",
+        "siteConfig": {
+          // Runtime stack (only if Linux)
+          "linuxFxVersion": "[if(parameters('isLinux'), parameters('linuxFxVersion'), json('null'))]",
+          "appSettings": [
+            {
+              "name": "ENVIRONMENT",
+              "value": "[parameters('appSettings').ENVIRONMENT]"
+            },
+            {
+              "name": "MySecret",
+              "value": "[parameters('appSettings').MySecret]"
+            }
+          ]
+        }
+      }
+    },
+
+    // Diagnostic settings (logs, errors, tracing)
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2022-03-01",
+      "name": "[format('{0}/web', parameters('webAppName'))]",
+      "condition": "[parameters('enableDiagnostics')]",
+      "properties": {
+        "detailedErrorLoggingEnabled": true,
+        "httpLoggingEnabled": true,
+        "requestTracingEnabled": true
+      }
+    },
+
+    // Optional staging slot
+    {
+      "type": "Microsoft.Web/sites/slots",
+      "apiVersion": "2022-03-01",
+      "name": "[format('{0}/staging', parameters('webAppName'))]",
+      "condition": "[parameters('enableStagingSlot')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "ENVIRONMENT",
+              "value": "Staging"
+            },
+            {
+              "name": "MySecret",
+              "value": "SlotSecret456"
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
+      ]
+    }
+  ]
+}

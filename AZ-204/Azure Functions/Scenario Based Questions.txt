@@ -1,0 +1,199 @@
+1. Scenario: Basic HTTP Trigger Handling a GET Request
+Question:
+You are building an Azure Function that is triggered by an HTTP GET request. The function needs to return a list of all active users from a database in JSON format. If no users are found, the function should return a 404 Not Found response with a message "No users found."
+
+How would you implement this in the Azure Function?
+
+-----------------------------------------------------------------------------------------------------
+2. Scenario: HTTP POST Request for User Registration
+Question:
+You are creating an Azure Function to handle user registration via HTTP POST requests. The request contains a JSON payload with the user's name, email, and password. The function needs to:
+
+Validate the input.
+
+Check if the email already exists in the database.
+
+If the email is already registered, return a 409 Conflict status with a message "Email already exists."
+
+If the email is unique, save the user and return a 201 Created status with a message "User registered successfully."
+
+How would you design this HTTP-triggered function?
+
+-----------------------------------------------------------------------------------------------------
+3. Scenario: Handling HTTP Trigger with Query Parameters
+Question:
+You are building an HTTP-triggered Azure Function to fetch product details based on query parameters productId and categoryId. If the productId or categoryId is not provided, the function should return a 400 Bad Request response with an error message.
+
+How would you implement this Azure Function to handle the query parameters?
+
+-----------------------------------------------------------------------------------------------------
+4. Scenario: Securing HTTP Trigger with API Key
+Question:
+You are tasked with securing your Azure Function, which is triggered by HTTP requests. The function must validate that the incoming request contains a valid API key in the Authorization header. If the API key is invalid, the function should return a 401 Unauthorized status code with a message "Invalid API Key."
+
+What steps would you take to implement this functionality using Azure Functions?
+
+-----------------------------------------------------------------------------------------------------
+5. Scenario: Handling CORS in HTTP Trigger
+Question:
+You are developing an Azure Function with an HTTP trigger that needs to allow cross-origin requests. The function should be accessible from a front-end application hosted on a different domain (for example, https://client-app.com). How would you configure Cross-Origin Resource Sharing (CORS) for this function?
+
+-----------------------------------------------------------------------------------------------------
+6. Scenario: Logging and Monitoring HTTP Requests
+Question:
+Your Azure Function with an HTTP trigger needs to log the incoming requests (method, headers, body) and responses (status code, response time). Additionally, you need to monitor these logs for any failed requests. How would you implement logging and monitoring for this function?
+
+-----------------------------------------------------------------------------------------------------
+7. Scenario: Implementing HTTP Trigger for File Upload (POST Request)
+Question:
+You are tasked with implementing an Azure Function that handles file uploads via an HTTP POST request. The function needs to accept files, save them to Azure Blob Storage, and return a URL where the uploaded file can be accessed. If the file exceeds a certain size limit (e.g., 10MB), the function should return a 413 Payload Too Large status code.
+
+How would you implement this file upload functionality in Azure Functions?
+
+-----------------------------------------------------------------------------------------------------
+8. Scenario: Handling Multiple HTTP Methods in a Single Function
+Question:
+You need to design an Azure Function with an HTTP trigger that can handle multiple HTTP methods (GET, POST, PUT, DELETE). Each method should perform a different action:
+
+GET: Retrieve all products.
+
+POST: Add a new product.
+
+PUT: Update product details.
+
+DELETE: Delete a product.
+
+How would you implement this in your Azure Function?
+
+-----------------------------------------------------------------------------------------------------
+9. Scenario: Implementing Redirect Logic in HTTP Trigger
+Question:
+You are designing an Azure Function with an HTTP trigger that should return a redirect if the request URL contains a certain query parameter (redirect=true). If the query parameter is present, the function should return a 301 Moved Permanently HTTP response with the new URL. Otherwise, the function should process the request as usual.
+
+How would you implement the redirect logic in your function?
+
+-----------------------------------------------------------------------------------------------------
+10. Scenario: Returning Custom HTTP Status Codes and Headers
+Question:
+You need to implement an HTTP-triggered Azure Function that:
+
+Returns a 503 Service Unavailable status code if the function is under maintenance.
+
+Includes a custom header X-Status with the value Maintenance Mode in the response.
+
+Otherwise, it should return a 200 OK status code with a success message.
+
+-----------------------------------------------------------------------------------------------------
+11. Scenario: Storing User Data in Cosmos DB via HTTP Trigger (POST Request)
+Question:
+You are building an Azure Function triggered by an HTTP POST request. The request body contains user details (e.g., name, email, age). The function should:
+
+Save the user details into an Azure Cosmos DB collection.
+
+Return a 201 Created status code with a message "User created successfully" and include the id of the newly created user.
+
+How would you implement this functionality in your Azure Function with Cosmos DB?
+
+-----------------------------------------------------------------------------------------------------
+12. Scenario: Fetching Data from Cosmos DB via HTTP Trigger (GET Request)
+Question:
+You need to implement an Azure Function triggered by an HTTP GET request that fetches user details from an Azure Cosmos DB collection based on a provided userId as a query parameter. The function should return the user’s details as a JSON response. If the user is not found, it should return a 404 Not Found status with the message "User not found."
+
+How would you implement this HTTP-triggered function that interacts with Cosmos DB?
+
+-----------------------------------------------------------------------------------------------------
+13. Scenario: Implementing Bulk Data Insertion into Cosmos DB via HTTP Trigger (POST Request)
+Question:
+You are building an Azure Function triggered by an HTTP POST request. The function receives a large batch of user data (e.g., an array of user objects) and needs to insert the data into an Azure Cosmos DB collection. If any user data fails to be inserted due to a conflict or another issue, the function should log the error and return a 400 Bad Request with the message "Some records failed to insert."
+
+How would you implement this Azure Function to handle bulk inserts into Cosmos DB?
+
+-----------------------------------------------------------------------------------------------------
+14. Scenario: Storing Images in Azure Blob Storage via HTTP Trigger (POST Request)
+Question:
+You are tasked with building an Azure Function that allows users to upload images via HTTP POST requests. The function should:
+
+Accept an image file in the request body.
+
+Save the image to an Azure Blob Storage container.
+
+Store the Blob's URL in an Azure Cosmos DB collection (for future reference).
+
+Return a response with a 201 Created status code and the URL of the uploaded image.
+
+How would you implement this functionality with Azure Blob Storage and Cosmos DB in an HTTP-triggered function?
+
+-----------------------------------------------------------------------------------------------------
+15. Scenario: Retrieving and Returning Images from Azure Blob Storage via HTTP Trigger (GET Request)
+Question:
+You have an Azure Function that is triggered by an HTTP GET request. The request contains a fileName query parameter that specifies the name of an image stored in Azure Blob Storage. The function should:
+
+Retrieve the image from Blob Storage.
+
+Return the image in the HTTP response with the correct Content-Type header.
+
+If the image is not found, return a 404 Not Found status with the message "Image not found."
+
+How would you implement this Azure Function to serve images from Azure Blob Storage?
+
+-----------------------------------------------------------------------------------------------------
+16. Scenario: Updating Document in Cosmos DB via HTTP Trigger (PUT Request)
+Question:
+You are building an Azure Function with an HTTP trigger that handles PUT requests to update existing user details in an Azure Cosmos DB collection. The request contains the updated user data, and the function should:
+
+Use the userId from the request body to find the document in Cosmos DB.
+
+Update the document with the new details.
+
+If the user is not found, return a 404 Not Found status with the message "User not found."
+
+Return a 200 OK status if the update is successful.
+
+How would you implement this update functionality using Cosmos DB in an HTTP-triggered function?
+
+-----------------------------------------------------------------------------------------------------
+17. Scenario: Storing Logs in Azure Table Storage via HTTP Trigger
+Question:
+You are building an Azure Function triggered by HTTP requests. The function processes incoming requests and stores detailed logs (e.g., request body, processing status, and timestamp) in Azure Table Storage. The function should:
+
+Store the logs in a table called RequestLogs.
+
+Each log entry should include a PartitionKey, RowKey (timestamp or unique ID), and the log details.
+
+Return a 200 OK status with a message "Log stored successfully."
+
+How would you implement this functionality using Azure Table Storage in an HTTP-triggered function?
+
+-----------------------------------------------------------------------------------------------------
+18. Scenario: Deleting a Document from Cosmos DB via HTTP Trigger (DELETE Request)
+Question:
+You need to implement an Azure Function with an HTTP DELETE trigger that removes a user from an Azure Cosmos DB collection. The function should:
+
+Accept a userId as a query parameter.
+
+Remove the corresponding document from Cosmos DB.
+
+Return a 204 No Content status code if the user is successfully deleted, or a 404 Not Found status if the user does not exist.
+
+How would you implement this HTTP-triggered function that deletes a document from Cosmos DB?
+
+-----------------------------------------------------------------------------------------------------
+19. Scenario: Batch Process Files and Store Metadata in Cosmos DB
+Question:
+You need to create an Azure Function that is triggered by an HTTP request. The function will process a batch of files uploaded to Azure Blob Storage. After processing, the function should store metadata for each file (such as the file name, size, upload time) in Cosmos DB. The function should return a summary of the processed files and their metadata in the response.
+
+How would you implement this scenario where the function interacts with both Blob Storage and Cosmos DB?
+
+-----------------------------------------------------------------------------------------------------
+20. Scenario: Archiving Old Data from Cosmos DB to Azure Blob Storage via HTTP Trigger
+Question:
+You have an Azure Function triggered by an HTTP request. The function needs to:
+
+Retrieve old user data from Cosmos DB based on a lastLoginDate parameter in the request.
+
+Archive the data (as JSON files) into an Azure Blob Storage container.
+
+After archiving, delete the data from Cosmos DB to free up space.
+
+How would you implement this archiving process using Cosmos DB and Blob Storage in an HTTP-triggered Azure Function?
+

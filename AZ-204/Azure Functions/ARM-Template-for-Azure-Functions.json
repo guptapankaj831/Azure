@@ -1,0 +1,138 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2021-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "$comment": "ARM template to deploy an Azure Function App with a Storage Account, App Service Plan, and Application Insights",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "East US",
+      "metadata": {
+        "description": "The Azure region to deploy all resources."
+      }
+    },
+    "functionAppName": {
+      "type": "string",
+      "metadata": {
+        "description": "Globally unique name for the Azure Function App."
+      }
+    },
+    "runtime": {
+      "type": "string",
+      "defaultValue": "node",
+      "allowedValues": ["dotnet", "node", "python", "java", "powershell"],
+      "metadata": {
+        "description": "The runtime stack for the function app."
+      }
+    },
+    "runtimeVersion": {
+      "type": "string",
+      "defaultValue": "14",
+      "metadata": {
+        "description": "The version of the runtime, e.g., Node.js 14."
+      }
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "Y1",
+      "allowedValues": ["Y1", "B1", "P1v2", "S1"],
+      "metadata": {
+        "description": "The pricing tier for the App Service plan."
+      }
+    }
+  },
+  "variables": {
+    "$comment": "Auto-generate resource names using uniqueString to avoid conflicts.",
+    "storageAccountName": "[toLower(concat('st', uniqueString(resourceGroup().id)))]",
+    "planName": "[concat(parameters('functionAppName'), '-plan')]",
+    "appInsightsName": "[concat(parameters('functionAppName'), '-ai')]"
+  },
+  "resources": [
+    {
+      "$comment": "Storage account for function code and runtime storage.",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2021-04-01",
+      "location": "[parameters('location')]",
+      "name": "[variables('storageAccountName')]",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "accessTier": "Hot"
+      }
+    },
+    {
+      "$comment": "App Service Plan that hosts the Azure Function App.",
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2021-02-01",
+      "location": "[parameters('location')]",
+      "name": "[variables('planName')]",
+      "sku": {
+        "Tier": "[if(equals(parameters('sku'), 'Y1'), 'Dynamic', 'Standard')]",
+        "Name": "[parameters('sku')]"
+      },
+      "properties": {
+        "reserved": false
+      }
+    },
+    {
+      "$comment": "Application Insights instance for monitoring and diagnostics.",
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2015-05-01",
+      "location": "[parameters('location')]",
+      "name": "[variables('appInsightsName')]",
+      "properties": {
+        "Application_Type": "web"
+      }
+    },
+    {
+      "$comment": "The Function App itself, tied to the app plan, storage, and Insights.",
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2021-02-01",
+      "name": "[parameters('functionAppName')]",
+      "location": "[parameters('location')]",
+      "kind": "functionapp",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('planName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
+      ],
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('planName'))]",
+        "siteConfig": {
+          "$comment": "Function app configuration settings.",
+          "appSettings": [
+            {
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "[parameters('runtime')]"
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~4"
+            },
+            {
+              "name": "WEBSITE_NODE_DEFAULT_VERSION",
+              "value": "[parameters('runtimeVersion')]"
+            },
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2021-04-01').keys[0].value)]"
+            },
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2015-05-01').InstrumentationKey]"
+            }
+          ]
+        },
+        "httpsOnly": true
+      }
+    }
+  ],
+  "outputs": {
+    "$comment": "Return the function app's hostname as an output after deployment.",
+    "functionAppHostname": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Web/sites', parameters('functionAppName'))).defaultHostName]"
+    }
+  }
+}
